@@ -10,7 +10,7 @@ import retrofit2.converter.fastjson.FastJsonConverterFactory;
  */
 
 public class RetrofitUtil {
-    public static final String BASE_URL = "http://169.254.204.211:8888/";
+    public static final String BASE_URL = "http://169.254.145.168:8888/";
 
     private static Retrofit retrofit;
     private static Retrofit longRetrofit;

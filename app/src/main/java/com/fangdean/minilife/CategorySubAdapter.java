@@ -1,27 +1,20 @@
 package com.fangdean.minilife;
 
-import android.app.Activity;
 import android.app.AlertDialog;
-import android.arch.lifecycle.Observer;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Build;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
-import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.SparseArray;
 import android.view.Gravity;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -31,7 +24,6 @@ import com.fangdean.minilife.app.App;
 import com.fangdean.minilife.data.local.CategoryDao;
 import com.fangdean.minilife.data.local.GoodsDao;
 import com.fangdean.minilife.model.Category;
-import com.fangdean.minilife.model.CategoryBean;
 import com.fangdean.minilife.model.Goods;
 import com.fangdean.minilife.util.KeyboardUtil;
 import com.google.android.flexbox.FlexboxLayout;
@@ -83,7 +75,7 @@ public class CategorySubAdapter extends RecyclerView.Adapter<CategorySubAdapter.
             holder.swipeLayout.close(true);
             showDeleteDialog(v, datas.get(position));
         });
-        goodsDao.getGoodsByCategory(data.getId()).observe(activity, goodsList -> {
+        goodsDao.queryGoodsByCategory(data.getId()).observe(activity, goodsList -> {
             //比较数据只有改变了的项才进行一下操作,以数量和name作为比较的依据
             holder.fblGoods.removeAllViews();
             goodsList.forEach(goods -> {
@@ -218,9 +210,14 @@ public class CategorySubAdapter extends RecyclerView.Adapter<CategorySubAdapter.
             return;
         }
         Goods goods = new Goods();
+        long maxGoodsId = goodsDao.getMaxId();
+        goods.setId(maxGoodsId + 1);
+        goods.setUserId(category.getUserId());
+        goods.setCategoryId(category.getId());
         goods.setName(name);
-        goods.setCategory_id(category.getId());
         goods.setState(0);
+        goods.setOrderNum(0);
+        goods.setUpdateTime(System.currentTimeMillis());
         Long insert = goodsDao.insert(goods);
         if (insert > 0) {
             //隐藏键盘

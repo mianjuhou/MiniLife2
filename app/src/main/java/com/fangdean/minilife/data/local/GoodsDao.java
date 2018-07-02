@@ -14,8 +14,11 @@ import java.util.List;
 @Dao
 public interface GoodsDao {
 
-    @Query("select * from goods where category_id = (:categoryId)")
-    LiveData<List<Goods>> getGoodsByCategory(Long categoryId);
+    @Query("select * from goods where category_id = (:categoryId) order by order_num desc,id asc")
+    LiveData<List<Goods>> queryGoodsByCategory(Long categoryId);
+
+    @Query("select * from goods where category_id = (:categoryId) order by order_num desc,id asc")
+    List<Goods> getGoodsByCategory(Long categoryId);
 
     @Insert
     Long insert(Goods goods);
@@ -28,4 +31,10 @@ public interface GoodsDao {
 
     @Query("delete from goods where category_id = (:categoryId)")
     int deleteGoodsByCategory(Long categoryId);
+
+    @Query("select max(id) from goods")
+    long getMaxId();
+
+    @Query("select * from goods where id =(:id) and user_id = (:userId)")
+    Goods queryGoods(Long id, Long userId);
 }

@@ -1,25 +1,35 @@
 package com.fangdean.minilife.model;
 
+import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 @Entity(tableName = "user")
-public class User {
+public class User implements Parcelable {
 
     @PrimaryKey
+    @ColumnInfo(name = "id")
     private Long id;
 
+    @ColumnInfo(name = "name")
     private String name;
 
+    @ColumnInfo(name = "email")
     private String email;
 
+    @ColumnInfo(name = "password")
     private String password;
 
-    private Integer login_state;
+    @ColumnInfo(name = "login_state")
+    private Integer loginState;
 
-    private String machine_num;
+    @ColumnInfo(name = "machine_num")
+    private String machineNum;
 
-    private Long updatetime;
+    @ColumnInfo(name = "update_time")
+    private Long updateTime;
 
     public Long getId() {
         return id;
@@ -53,27 +63,69 @@ public class User {
         this.password = password;
     }
 
-    public Integer getLogin_state() {
-        return login_state;
+    public Integer getLoginState() {
+        return loginState;
     }
 
-    public void setLogin_state(Integer login_state) {
-        this.login_state = login_state;
+    public void setLoginState(Integer loginState) {
+        this.loginState = loginState;
     }
 
-    public String getMachine_num() {
-        return machine_num;
+    public String getMachineNum() {
+        return machineNum;
     }
 
-    public void setMachine_num(String machine_num) {
-        this.machine_num = machine_num;
+    public void setMachineNum(String machineNum) {
+        this.machineNum = machineNum;
     }
 
-    public Long getUpdatetime() {
-        return updatetime;
+    public Long getUpdateTime() {
+        return updateTime;
     }
 
-    public void setUpdatetime(Long updatetime) {
-        this.updatetime = updatetime;
+    public void setUpdateTime(Long updateTime) {
+        this.updateTime = updateTime;
     }
+
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeValue(this.id);
+        dest.writeString(this.name);
+        dest.writeString(this.email);
+        dest.writeString(this.password);
+        dest.writeValue(this.loginState);
+        dest.writeString(this.machineNum);
+        dest.writeValue(this.updateTime);
+    }
+
+    public User() {
+    }
+
+    protected User(Parcel in) {
+        this.id = (Long) in.readValue(Long.class.getClassLoader());
+        this.name = in.readString();
+        this.email = in.readString();
+        this.password = in.readString();
+        this.loginState = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.machineNum = in.readString();
+        this.updateTime = (Long) in.readValue(Long.class.getClassLoader());
+    }
+
+    public static final Parcelable.Creator<User> CREATOR = new Parcelable.Creator<User>() {
+        @Override
+        public User createFromParcel(Parcel source) {
+            return new User(source);
+        }
+
+        @Override
+        public User[] newArray(int size) {
+            return new User[size];
+        }
+    };
 }

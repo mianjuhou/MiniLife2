@@ -1,11 +1,8 @@
 package com.fangdean.minilife;
 
-import android.app.Dialog;
-import android.arch.lifecycle.Observer;
 import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
-import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -16,7 +13,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.fangdean.minilife.app.App;
@@ -24,14 +20,8 @@ import com.fangdean.minilife.data.local.CategoryDao;
 import com.fangdean.minilife.data.local.GoodsDao;
 import com.fangdean.minilife.databinding.ActivityGoodsBinding;
 import com.fangdean.minilife.model.Category;
-import com.fangdean.minilife.model.CategoryBean;
-import com.fangdean.minilife.model.Goods;
 import com.fangdean.minilife.util.KeyboardUtil;
 import com.zhy.adapter.recyclerview.wrapper.HeaderAndFooterWrapper;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.Consumer;
 
 public class GoodsActivity extends AppCompatActivity {
 
@@ -56,8 +46,10 @@ public class GoodsActivity extends AppCompatActivity {
         topCategory = getIntent().getParcelableExtra("top_category");
         categoryDao = App.dbMiniLife.categoryDao();
         goodsDao = App.dbMiniLife.goodsDao();
-        this.setTitle(topCategory.getName());
 
+        binding.tvTitle.setText(topCategory.getName());
+        binding.tvBack.setOnClickListener(v -> finish());
+        binding.tvSync.setOnClickListener(v -> sync());
 
         adapter = new CategorySubAdapter(goodsDao, this);
         footerWrapper = new HeaderAndFooterWrapper(adapter);
@@ -71,6 +63,10 @@ public class GoodsActivity extends AppCompatActivity {
             adapter.setDatas(categories);
             footerWrapper.notifyDataSetChanged();
         });
+    }
+
+    private void sync() {
+
     }
 
     private void showDialog() {
@@ -91,9 +87,12 @@ public class GoodsActivity extends AppCompatActivity {
                         return;
                     }
                     Category category = new Category();
+                    long maxCategoryId = categoryDao.getMaxId();
+                    category.setId(maxCategoryId + 1);
                     category.setName(name);
-                    category.setParent_id(topCategory.getId());
-                    category.setUser_id(App.loginedUser.getId());
+                    category.setParentId(topCategory.getId());
+                    category.setUserId(App.loginedUser.getId());
+                    category.setUpdateTime(System.currentTimeMillis());
                     Long insertNum = categoryDao.insert(category);
                     if (insertNum > 0) {
                         KeyboardUtil.closeKeyboard((GoodsActivity.this));

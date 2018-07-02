@@ -1,23 +1,33 @@
 package com.fangdean.minilife.model;
 
+import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 
-@Entity(tableName = "category")
+@Entity(tableName = "category",primaryKeys = {"id","user_id"})
 public class Category implements Parcelable {
-
-    @PrimaryKey(autoGenerate = true)
+    @NonNull
+    @ColumnInfo(name = "id")
     private Long id;
 
+    @ColumnInfo(name = "parent_id")
+    private Long parentId;
+
+    @NonNull
+    @ColumnInfo(name = "user_id")
+    private Long userId;
+
+    @ColumnInfo(name = "name")
     private String name;
 
-    private Long parent_id;
+    @ColumnInfo(name = "order_num")
+    private Integer orderNum;
 
-    private Long user_id;
-
-    private Integer order_num;
+    @ColumnInfo(name = "update_time")
+    private Long updateTime;
 
     public Long getId() {
         return id;
@@ -35,28 +45,36 @@ public class Category implements Parcelable {
         this.name = name;
     }
 
-    public Long getParent_id() {
-        return parent_id;
+    public Long getParentId() {
+        return parentId;
     }
 
-    public void setParent_id(Long parent_id) {
-        this.parent_id = parent_id;
+    public void setParentId(Long parentId) {
+        this.parentId = parentId;
     }
 
-    public Long getUser_id() {
-        return user_id;
+    public Long getUserId() {
+        return userId;
     }
 
-    public void setUser_id(Long user_id) {
-        this.user_id = user_id;
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 
-    public Integer getOrder_num() {
-        return order_num;
+    public Integer getOrderNum() {
+        return orderNum;
     }
 
-    public void setOrder_num(Integer order_num) {
-        this.order_num = order_num;
+    public void setOrderNum(Integer orderNum) {
+        this.orderNum = orderNum;
+    }
+
+    public Long getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Long updateTime) {
+        this.updateTime = updateTime;
     }
 
 
@@ -69,9 +87,10 @@ public class Category implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeValue(this.id);
         dest.writeString(this.name);
-        dest.writeValue(this.parent_id);
-        dest.writeValue(this.user_id);
-        dest.writeValue(this.order_num);
+        dest.writeValue(this.parentId);
+        dest.writeValue(this.userId);
+        dest.writeValue(this.orderNum);
+        dest.writeValue(this.updateTime);
     }
 
     public Category() {
@@ -80,9 +99,10 @@ public class Category implements Parcelable {
     protected Category(Parcel in) {
         this.id = (Long) in.readValue(Long.class.getClassLoader());
         this.name = in.readString();
-        this.parent_id = (Long) in.readValue(Long.class.getClassLoader());
-        this.user_id = (Long) in.readValue(Long.class.getClassLoader());
-        this.order_num = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.parentId = (Long) in.readValue(Long.class.getClassLoader());
+        this.userId = (Long) in.readValue(Long.class.getClassLoader());
+        this.orderNum = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.updateTime = (Long) in.readValue(Long.class.getClassLoader());
     }
 
     public static final Parcelable.Creator<Category> CREATOR = new Parcelable.Creator<Category>() {

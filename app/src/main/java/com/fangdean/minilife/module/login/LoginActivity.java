@@ -62,7 +62,7 @@ public class LoginActivity extends AppCompatActivity {
                             if (response.getCode() == 1) {
                                 User user = response.getContent();
                                 userDao.updateLoginState();
-                                user.setLogin_state(1);
+                                user.setLoginState(1);
                                 userDao.insert(user);
                                 App.loginedUser = user;
                                 MainActivity.start(LoginActivity.this);

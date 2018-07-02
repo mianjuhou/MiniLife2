@@ -12,7 +12,7 @@ import retrofit2.http.POST;
 public interface UserService {
 
     @FormUrlEncoded
-    @POST("user-server/user/login")
+    @POST("user/user/login")
     Single<ResponseBean<User>> login(@Field("email") String email, @Field("password") String password);
 
 }
